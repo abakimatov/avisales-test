@@ -1,11 +1,12 @@
 import React from 'react'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
-function App() {
-  return (
-    <div>
-      <h1>aviasales test</h1>
-    </div>
-  )
-}
+import { Home } from './pages/home'
 
-export default App
+export const App = () => (
+  <BrowserRouter>
+    <Switch>
+      <Route exact path="/" component={Home} />
+    </Switch>
+  </BrowserRouter>
+)

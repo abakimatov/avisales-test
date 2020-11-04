@@ -58,6 +58,9 @@
     --secondary-color: var(--gray);
     --default-color: var(--tundora);
 
+    /* breakpoints */
+    --breakpoint-desktop: 96rem;
+
     /* global */
     --border-radius-default: 0.5rem;
     --border-radius-checkbox: 0.2rem;
@@ -65,7 +68,9 @@
     --letter-spacing: 0.05rem;
 }
 
-
+* {
+    box-sizing: border-box;
+}
 
 body,
 html {
