@@ -18,7 +18,12 @@ export interface Ticket {
   segments: Segment[]
 }
 
+export interface TicketsResponse {
+  tickets: Ticket[]
+  stop: boolean
+}
+
 export interface TicketsApi {
   getSearchId: () => Promise<AxiosResponse<SearchId>>
-  getTickets: (searchId: string) => Promise<AxiosResponse<Ticket>>
+  getTickets: (searchId: string) => Promise<AxiosResponse<TicketsResponse>>
 }
