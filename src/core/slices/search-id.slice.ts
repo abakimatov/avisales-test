@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { SearchId } from 'api'
+import { SearchId, ticketsApi } from 'api'
 import { AppThunk } from '../store'
 
 export interface SearchIdState {
@@ -42,7 +42,7 @@ export const {
 } = actions
 export const searchId = reducer
 
-export const getSearchId = (): AppThunk => async (dispatch, _, ticketsApi) => {
+export const getSearchId = (): AppThunk => async (dispatch) => {
   dispatch(fetchSearchIdStart())
   try {
     const { data } = await ticketsApi.getSearchId()
