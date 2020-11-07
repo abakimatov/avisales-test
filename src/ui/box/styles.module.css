@@ -1,0 +1,6 @@
+.boxRoot {
+    width: 100%;
+    border-radius: var(--border-radius-default);
+    box-shadow: var(--box-shadow);
+    background-color: var(--box-background-color);
+}
