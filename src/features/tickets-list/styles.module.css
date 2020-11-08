@@ -1,0 +1,82 @@
+.ticketsListRoot {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+}
+
+.ticketsListRoot div {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.ticketsListRoot div::-webkit-scrollbar {
+    display: none;
+}
+
+.ticketWrapper {
+    padding-bottom: var(--space-m);
+}
+
+.ticketWrapper:last-child {
+    padding-bottom: 0;
+}
+
+.ticketContainer {
+    padding: var(--space-m);
+    display: flex;
+    flex-direction: column;
+}
+
+.infoRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+}
+
+.infoRow:first-child {
+    padding-bottom: var(--space-m);
+    align-items: center;
+}
+
+.infoRow:nth-child(2) {
+    padding-bottom: var(--space-s);
+}
+
+.price {
+    font-family: var(--primary-font);
+    color: var(--primary-color);
+    font-weight: var(--primary-weight);
+    font-size: var(--font-size-xl);
+    line-height: var(--line-height-xxxl);
+    text-transform: uppercase;
+}
+
+.detailsColumn {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-right: var(--space-m);
+}
+
+.detailsColumn:last-child {
+    margin-right: 0;
+}
+
+.detailsTitle {
+    font-family: var(--primary-font);
+    font-weight: var(--primary-weight);
+    font-size: var(--font-size-s);
+    line-height: var(--line-height-m);
+    letter-spacing: var(--letter-spacing);
+    color: var(--secondary-color);
+    text-transform: uppercase;
+}
+
+.detailsValue {
+    font-family: var(--primary-font);
+    font-weight: var(--primary-weight);
+    font-size: var(--font-size-l);
+    line-height: var(--line-height-xl);
+    color: var(--default-color);
+}

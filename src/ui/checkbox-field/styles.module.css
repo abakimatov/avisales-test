@@ -1,0 +1,70 @@
+.wrapper {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.checkIcon {
+    opacity: 0;
+    transition: opacity var(--transition-timing);
+}
+
+.checkIcon path {
+    fill: var(--primary-color);
+}
+
+.hiddenCheckbox {
+    border: 0;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+.fakeCheckbox {
+    width: var(--space-m);
+    height: var(--space-m);
+    border-radius: var(--border-radius-checkbox);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: border-color var(--transition-timing);
+    border: 0.1rem solid var(--rock-blue);
+}
+
+.active {
+    border: 0.1rem solid var(--primary-color);
+}
+
+.active .checkIcon {
+    opacity: 1;
+}
+
+.fieldWrapper {
+    width: 100%;
+    padding: var(--space-s) var(--space-m);
+    background-color: var(--box-background-color);
+    transition: background-color var(--transition-timing);
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+}
+
+.fieldWrapper:hover {
+    background-color: var(--twilight-blue);
+}
+
+.label {
+    padding-left: var(--space-s);
+    font-family: var(--secondary-font);
+    font-weight: var(--secondary-weight);
+    color: var(--default-color);
+    font-size: var(--font-size-m);
+    line-height: var(--line-height-l);
+    user-select: none;
+    cursor: pointer;
+}

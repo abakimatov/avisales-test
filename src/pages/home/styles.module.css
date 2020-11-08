@@ -14,3 +14,8 @@
     padding-left: 1rem;
     height: 100%;
 }
+
+.ticketsWrapper {
+    padding-top: var(--space-m);
+    height: 100%;
+}

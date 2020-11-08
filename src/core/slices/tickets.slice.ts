@@ -1,13 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { Ticket, ticketsApi } from 'api'
-import { sleep, getCarrierIconUrl, generateId } from 'lib/utils'
+import { ticketsApi } from 'api'
+import { SORT_METHODS } from 'constants/sort'
+import { sleep } from 'lib/utils'
+import { transformService, Ticket } from 'lib/worker'
 import { AppThunk } from '../store'
-
-interface IdentifiedTicked extends Ticket {
-  id: string
-  carrierIconUrl: string
-}
 
 interface AvailableStops {
   [stopsAmount: string]: boolean
@@ -17,13 +14,17 @@ interface SelectedStops extends AvailableStops {
   all: boolean
 }
 
-interface TicketsState {
-  data: IdentifiedTicked[]
+export interface TicketsState {
+  rawBackendData: Ticket[]
+  data: Ticket[]
   selectedStops: SelectedStops
+  sortMethod: SORT_METHODS
 }
 
 const initialState: TicketsState = {
+  rawBackendData: [],
   data: [],
+  sortMethod: SORT_METHODS.CHEAP,
   selectedStops: {
     all: true,
   },
@@ -33,16 +34,55 @@ const { actions, reducer } = createSlice({
   name: 'tickets',
   initialState,
   reducers: {
-    ticketsFetchSuccess(state, action: PayloadAction<IdentifiedTicked[]>) {
-      state.data = state.data.concat(action.payload)
+    updateBackendTickets(state, action: PayloadAction<Ticket[]>) {
+      state.rawBackendData = action.payload
+    },
+    updateTickets(state, action: PayloadAction<Ticket[]>) {
+      state.data = action.payload
     },
     updateSelectedStops(state, action: PayloadAction<AvailableStops>) {
-      state.selectedStops = { ...state.selectedStops, ...action.payload }
+      state.selectedStops = { ...action.payload, ...state.selectedStops }
+    },
+    changeAllStops(state, action: PayloadAction<boolean>) {
+      const { all, ...availableStops } = state.selectedStops
+      const currentAllFilterState = action.payload
+      const stopsToUpdate: SelectedStops = { all: currentAllFilterState }
+
+      Object.keys(availableStops).forEach((amount) => {
+        stopsToUpdate[amount] = currentAllFilterState
+      })
+
+      state.selectedStops = stopsToUpdate
+    },
+    changeOneStop(state, action: PayloadAction<string>) {
+      const { all, ...availableStops } = state.selectedStops
+      const currentStopsAmount = action.payload
+
+      if (all) {
+        state.selectedStops = {
+          ...availableStops,
+          [currentStopsAmount]: false,
+          all: false,
+        }
+      } else {
+        const isSelected = availableStops[currentStopsAmount]
+        state.selectedStops[currentStopsAmount] = !isSelected
+      }
+    },
+    updateSortMethod(state, action: PayloadAction<SORT_METHODS>) {
+      state.sortMethod = action.payload
     },
   },
 })
 
-export const { ticketsFetchSuccess, updateSelectedStops } = actions
+export const {
+  updateBackendTickets,
+  updateTickets,
+  updateSelectedStops,
+  changeAllStops,
+  changeOneStop,
+  updateSortMethod,
+} = actions
 export const tickets = reducer
 
 async function* ticketsGenerator(searchId: string) {
@@ -64,26 +104,89 @@ export const startTicketsPolling = (): AppThunk => async (
 ) => {
   const { value } = getState().searchId
 
-  for await (const tickets of ticketsGenerator(value as string)) {
-    const identifiedTickets = []
-    const availableStops: AvailableStops = {}
+  for await (const ticketsChunk of ticketsGenerator(value as string)) {
+    const {
+      data,
+      sortMethod,
+      selectedStops,
+      rawBackendData,
+    } = getState().tickets
 
-    for (const ticket of tickets) {
-      const {
-        segments: [thereDirection, backDirection],
-      } = ticket
-      const identifiedTicked: IdentifiedTicked = {
-        id: generateId(),
-        carrierIconUrl: getCarrierIconUrl(ticket.carrier),
-        ...ticket,
-      }
+    const { tickets, availableStops } = await transformService.prepareTickets(
+      ticketsChunk,
+    )
 
-      availableStops[thereDirection.stops.length] = true
-      availableStops[backDirection.stops.length] = true
-      identifiedTickets.push(identifiedTicked)
-    }
+    const updatedBackendTickets = rawBackendData.concat(data)
+    const updatedTickets = data.concat(tickets)
 
+    const filteredTickets = await transformService.filterTickets(
+      updatedTickets,
+      selectedStops,
+    )
+
+    const sortedTickets = await transformService.sortTickets(
+      filteredTickets,
+      sortMethod,
+    )
+
+    dispatch(updateBackendTickets(updatedBackendTickets))
+    dispatch(updateTickets(sortedTickets))
     dispatch(updateSelectedStops(availableStops))
-    dispatch(ticketsFetchSuccess(identifiedTickets))
   }
+}
+
+export const changeAllStopsFilter = (): AppThunk => async (
+  dispatch,
+  getState,
+) => {
+  const { selectedStops, rawBackendData, sortMethod } = getState().tickets
+  const currentAllFilterState = !selectedStops.all
+
+  dispatch(changeAllStops(currentAllFilterState))
+
+  const filteredTickets = await transformService.filterTickets(rawBackendData, {
+    ...selectedStops,
+    all: currentAllFilterState,
+  })
+
+  const sortedTickets = await transformService.sortTickets(
+    filteredTickets,
+    sortMethod,
+  )
+
+  dispatch(updateTickets(sortedTickets))
+}
+
+export const changeStopsFilter = (stopsAmount: string): AppThunk => async (
+  dispatch,
+  getState,
+) => {
+  const { selectedStops, rawBackendData, sortMethod } = getState().tickets
+
+  dispatch(changeOneStop(stopsAmount))
+
+  const filteredTickets = await transformService.filterTickets(rawBackendData, {
+    ...selectedStops,
+    [stopsAmount]: !selectedStops[stopsAmount],
+  })
+
+  const sortedTickets = await transformService.sortTickets(
+    filteredTickets,
+    sortMethod,
+  )
+
+  dispatch(updateTickets(sortedTickets))
+}
+
+export const changeSortMethod = (sortMethod: SORT_METHODS): AppThunk => async (
+  dispatch,
+  getState,
+) => {
+  const { data } = getState().tickets
+
+  dispatch(updateSortMethod(sortMethod))
+
+  const sortedTickets = await transformService.sortTickets(data, sortMethod)
+
+  dispatch(updateTickets(sortedTickets))
 }

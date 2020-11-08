@@ -6,8 +6,10 @@ import { Content } from 'templates/content'
 import { Centered } from 'templates/centered'
 import { Loader } from 'ui/loader'
 import { LogoIcon } from 'ui/logo-icon'
+import { StopsFilter } from 'features/stops-filter'
+import { SortControl } from 'features/sort-control'
+import { TicketsList } from 'features/tickets-list'
 import { getSearchId } from 'core/slices/search-id.slice'
-import { startTicketsPolling } from 'core/slices/tickets.slice'
 import { isSearchIdReadySelector } from 'core/selectors/search-id'
 
 import s from './styles.module.css'
@@ -28,12 +30,6 @@ export const Home = () => {
     }
   }, [dispatch, isSearchIdReady])
 
-  useEffect(() => {
-    if (isSearchIdReady) {
-      dispatch(startTicketsPolling())
-    }
-  }, [isSearchIdReady])
-
   return (
     <div className={s.homePageRoot}>
       <Header>
@@ -47,10 +43,13 @@ export const Home = () => {
       {isSearchIdReady && (
         <Content>
           <aside className={s.contentAside}>
-            <span>aside</span>
+            <StopsFilter />
           </aside>
           <main className={s.contentMain}>
-            <h1>main</h1>
+            <SortControl />
+            <div className={s.ticketsWrapper}>
+              <TicketsList />
+            </div>
           </main>
         </Content>
       )}

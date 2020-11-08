@@ -1,0 +1,18 @@
+.wrapper {
+    padding: var(--space-m) 0;
+}
+
+.titleContainer {
+    padding: 0 var(--space-m);
+    margin-bottom: var(--space-s);
+}
+
+.title {
+    font-family: var(--primary-font);
+    font-weight: var(--primary-weight);
+    font-size: var(--font-size-s);
+    line-height: var(--line-height-s);
+    letter-spacing: var(--letter-spacing);
+    color: var(--default-color);
+    text-transform: uppercase;
+}

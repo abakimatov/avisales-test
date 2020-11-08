@@ -66,6 +66,7 @@
     --border-radius-checkbox: 0.2rem;
     --background-color: var(--catskill-white);
     --letter-spacing: 0.05rem;
+    --transition-timing: 0.2s;
 }
 
 * {
