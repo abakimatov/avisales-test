@@ -2,12 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { SearchId, ticketsApi } from 'api'
 import { AppThunk } from '../store'
-
-export interface SearchIdState {
-  value: null | string
-  loading: boolean
-  error: null | string
-}
+import { SearchIdState } from '../typings/search-id'
 
 const initialState: SearchIdState = {
   value: null,

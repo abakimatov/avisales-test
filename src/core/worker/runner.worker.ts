@@ -1,18 +1,23 @@
 import * as Comlink from 'comlink'
 
 import { SORT_METHODS } from 'constants/sort'
-import { getCarrierIconUrl } from '../utils'
+import { getCarrierIconUrl } from '../../lib/utils'
 import {
   getFormattedPrice,
   getStopsLabel,
   getFormattedTimeRange,
   getFormattedDuration,
-} from '../formatters'
+} from '../../lib/formatters'
+import { TransformService, Ticket } from './types'
+import { AvailableStops } from '../typings/tickets'
 
-const transformService = {
+const transformService: TransformService = {
+  async concatTickets(tickets, dataToConcat) {
+    return tickets.concat(dataToConcat)
+  },
   async prepareTickets(ticketsChunk) {
     const tickets = []
-    const availableStops = {}
+    const availableStops: AvailableStops = {}
 
     for (const { segments, carrier, price } of ticketsChunk) {
       const [thereDirection, backDirection] = segments
@@ -48,17 +53,27 @@ const transformService = {
   async filterTickets(tickets, selectedStops) {
     if (selectedStops.all) return tickets
 
+    const isNoOneSelected = Object.values(selectedStops).every((el) => !el)
+
+    if (isNoOneSelected) return []
+
     return tickets.filter(({ segments }) => {
       const [thereDirection, backDirection] = segments
-      const thereStops = thereDirection.stops.length
-      const backStops = backDirection.stops.length
+      const thereStopsAmount = thereDirection.stops.length
+      const backStopsAmount = backDirection.stops.length
+      const isThereStopsSelected = selectedStops[thereStopsAmount]
+      const isBackStopsSelected = selectedStops[backStopsAmount]
+      const isValidThereDirectionStops =
+        isThereStopsSelected || thereStopsAmount === 0
+      const isValidBackDirectionStops =
+        isBackStopsSelected || backStopsAmount === 0
 
-      return selectedStops[thereStops] || selectedStops[backStops]
+      return isValidThereDirectionStops && isValidBackDirectionStops
     })
   },
   async sortTickets(tickets, sortMethod) {
-    const sortByCheap = (a, b) => a.price - b.price
-    const sortByDuration = (a, b) => {
+    const sortByCheap = (a: Ticket, b: Ticket) => a.price - b.price
+    const sortByDuration = (a: Ticket, b: Ticket) => {
       const [thereDirectionA, backDirectionA] = a.segments
       const [thereDirectionB, backDirectionB] = b.segments
 
@@ -70,6 +85,7 @@ const transformService = {
 
     const sortFunction =
       sortMethod === SORT_METHODS.CHEAP ? sortByCheap : sortByDuration
+
     return tickets.sort(sortFunction)
   },
 }

@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit'
 
 import { RootState } from '../store/root-reducer'
-import { SearchIdState } from '../slices/search-id.slice'
+import { SearchIdState } from '../typings/search-id'
 
 const searchIdStateSelector = (state: RootState): SearchIdState =>
   state.searchId

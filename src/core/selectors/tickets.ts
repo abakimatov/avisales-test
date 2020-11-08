@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit'
 
 import { RootState } from '../store/root-reducer'
-import { TicketsState } from '../slices/tickets.slice'
+import { TicketsState } from '../typings/tickets'
 
 const ticketsStateSelector = (state: RootState): TicketsState => state.tickets
 
@@ -31,7 +31,7 @@ export const sortMethodSelector = createSelector(
 
 export const ticketsSelector = createSelector(
   [ticketsStateSelector, selectedStopsSelector, sortMethodSelector],
-  ({ data }) => {
-    return data
+  ({ viewData }) => {
+    return viewData
   },
 )

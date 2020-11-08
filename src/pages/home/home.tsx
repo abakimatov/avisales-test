@@ -18,17 +18,9 @@ export const Home = () => {
   const dispatch = useDispatch()
   const isSearchIdReady = useSelector(isSearchIdReadySelector)
 
-  /**
-   * Достаточно холиварный момент с добавлением dispatch в депсы
-   * однако я считаю лучше не обманывать useEffect о зависимостях, даже если
-   * ссылка на dispatch никогда не поменяется. В таком случае код однозначно
-   * прозрачен, хоть при этом и усложняется дополнительными конструкциями.
-   * */
   useEffect(() => {
-    if (!isSearchIdReady) {
-      dispatch(getSearchId())
-    }
-  }, [dispatch, isSearchIdReady])
+    dispatch(getSearchId())
+  }, [])
 
   return (
     <div className={s.homePageRoot}>

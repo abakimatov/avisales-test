@@ -27,7 +27,7 @@ export const TicketsList = () => {
   }
 
   return (
-    <AutoSizer defaultHeight={500} className={s.ticketsListRoot}>
+    <AutoSizer className={s.ticketsListRoot}>
       {({ width, height }) => (
         <List
           height={height}
