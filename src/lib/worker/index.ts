@@ -1,1 +1,2 @@
-export { runInWorker } from './main'
+export { transformService } from './main'
+export type { Ticket, Segment } from './types'

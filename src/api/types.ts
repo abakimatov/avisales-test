@@ -4,7 +4,7 @@ export interface SearchId {
   searchId: string
 }
 
-export interface Segment {
+export interface ApiSegment {
   origin: string
   destination: string
   date: string
@@ -12,14 +12,14 @@ export interface Segment {
   duration: number
 }
 
-export interface Ticket {
+export interface ApiTicket {
   price: number
   carrier: string
-  segments: Segment[]
+  segments: ApiSegment[]
 }
 
 export interface TicketsResponse {
-  tickets: Ticket[]
+  tickets: ApiTicket[]
   stop: boolean
 }
 

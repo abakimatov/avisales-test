@@ -17,4 +17,5 @@
 
 .ticketsWrapper {
     padding-top: var(--space-m);
+    height: 100%;
 }

@@ -8,7 +8,10 @@ import {
   allStopsIsCheckedSelector,
   availableStopsSelector,
 } from 'core/selectors/tickets'
-import { changeAllStops, changeOneStop } from 'core/slices/tickets.slice'
+import {
+  changeAllStopsFilter,
+  changeStopsFilter,
+} from 'core/slices/tickets.slice'
 
 import s from './styles.module.css'
 
@@ -17,8 +20,8 @@ export const StopsFilter = () => {
   const allStopsIsChecked = useSelector(allStopsIsCheckedSelector)
   const availableStops = useSelector(availableStopsSelector)
 
-  const onChangeAll = () => dispatch(changeAllStops())
-  const onChangeCheckbox = (value: string) => dispatch(changeOneStop(value))
+  const onChangeAll = () => dispatch(changeAllStopsFilter())
+  const onChangeCheckbox = (value: string) => dispatch(changeStopsFilter(value))
 
   return (
     <Box>

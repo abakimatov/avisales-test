@@ -1,7 +1,7 @@
 export { ticketsApi } from './tickets-api'
 export type {
-  Segment,
-  Ticket,
+  ApiSegment,
+  ApiTicket,
   SearchId,
   TicketsApi,
   TicketsResponse,

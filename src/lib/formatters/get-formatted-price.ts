@@ -1,4 +1,4 @@
-export const getHumanizedPrice = (price: number): string => {
+export const getFormattedPrice = (price: number): string => {
   const formattedPrice = new Intl.NumberFormat('ru-RU', {
     maximumSignificantDigits: 3,
   }).format(price)
