@@ -24,8 +24,8 @@ export interface SelectedStops extends AvailableStops {
 }
 
 export interface TicketsState {
-  data: Ticket[]
-  viewData: Ticket[]
+  origin: Ticket[]
+  modified: Ticket[]
   selectedStops: SelectedStops
   sortMethod: SORT_METHODS
 }

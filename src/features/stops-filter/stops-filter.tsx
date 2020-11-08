@@ -41,7 +41,7 @@ export const StopsFilter = () => {
             onChange={onChangeCheckbox}
             checked={checked}
             value={stopsAmount}
-            label={getStopsLabel(stopsAmount)}
+            label={getStopsLabel(Number(stopsAmount))}
           />
         ))}
       </div>

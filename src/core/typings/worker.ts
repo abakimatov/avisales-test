@@ -22,12 +22,27 @@ export interface TicketsPrepareResult {
   availableStops: AvailableStops
 }
 
+type TicketsTransformResult = Promise<Ticket[]>
+
+export type ConcatTickets = (
+  tickets: Ticket[],
+  dataToConcat: Ticket[],
+) => TicketsTransformResult
+export type PrepareTickets = (
+  tickets: ApiTicket[],
+) => Promise<TicketsPrepareResult>
+export type FilterTickets = (
+  tickets: Ticket[],
+  selectedStops: SelectedStops,
+) => TicketsTransformResult
+export type SortTickets = (
+  tickets: Ticket[],
+  sortMethod: SORT_METHODS,
+) => TicketsTransformResult
+
 export interface TransformService {
-  concatTickets(tickets: Ticket[], dataToConcat: Ticket[]): Promise<Ticket[]>
-  prepareTickets(tickets: ApiTicket[]): Promise<TicketsPrepareResult>
-  filterTickets(
-    tickets: Ticket[],
-    selectedStops: SelectedStops,
-  ): Promise<Ticket[]>
-  sortTickets(tickets: Ticket[], sortMethod: SORT_METHODS): Promise<Ticket[]>
+  concatTickets: ConcatTickets
+  prepareTickets: PrepareTickets
+  filterTickets: FilterTickets
+  sortTickets: SortTickets
 }
