@@ -183,11 +183,11 @@ export const changeSortMethod = (sortMethod: SORT_METHODS): AppThunk => async (
   getState,
   transformService,
 ) => {
-  const { data } = getState().tickets
+  const { viewData } = getState().tickets
 
   dispatch(updateSortMethod(sortMethod))
 
-  const sortedTickets = await transformService.sortTickets(data, sortMethod)
+  const sortedTickets = await transformService.sortTickets(viewData, sortMethod)
 
   dispatch(updateViewTickets(sortedTickets))
 }
