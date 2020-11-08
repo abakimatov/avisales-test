@@ -44,7 +44,7 @@
 }
 
 .price {
-    font-family: var(--primary-font);
+    font-family: var(--font-family);
     color: var(--primary-color);
     font-weight: var(--primary-weight);
     font-size: var(--font-size-xl);
@@ -70,7 +70,7 @@
 }
 
 .detailsTitle {
-    font-family: var(--primary-font);
+    font-family: var(--font-family);
     font-weight: var(--primary-weight);
     font-size: var(--font-size-s);
     line-height: var(--line-height-m);
@@ -80,7 +80,7 @@
 }
 
 .detailsValue {
-    font-family: var(--primary-font);
+    font-family: var(--font-family);
     font-weight: var(--primary-weight);
     font-size: var(--font-size-l);
     line-height: var(--line-height-xl);
