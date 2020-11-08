@@ -1,6 +1,6 @@
 import { ApiTicket, ApiSegment } from 'api'
 
-import { SelectedStops, AvailableStops } from '../typings/tickets'
+import { SelectedStops, AvailableStops } from './tickets'
 import { SORT_METHODS } from '../../constants/sort'
 
 export interface Segment extends ApiSegment {

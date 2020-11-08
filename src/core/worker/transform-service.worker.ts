@@ -8,7 +8,7 @@ import {
   getFormattedTimeRange,
   getFormattedDuration,
 } from '../../lib/formatters'
-import { TransformService, Ticket } from './types'
+import { TransformService, Ticket } from '../typings/worker'
 import { AvailableStops } from '../typings/tickets'
 
 const transformService: TransformService = {
