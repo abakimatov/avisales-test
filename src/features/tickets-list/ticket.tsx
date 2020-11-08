@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React from 'react'
 
 import { Box } from 'ui/box'
 import { Ticket as TicketType } from 'core/typings/worker'

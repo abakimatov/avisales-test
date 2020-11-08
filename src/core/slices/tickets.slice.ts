@@ -25,41 +25,18 @@ const { actions, reducer } = createSlice({
   name: 'tickets',
   initialState,
   reducers: {
-    updateTickets(state, action: PayloadAction<Ticket[]>) {
+    updateOriginTickets(state, action: PayloadAction<Ticket[]>) {
       state.origin = action.payload
     },
     updateModifiedTickets(state, action: PayloadAction<Ticket[]>) {
       state.modified = action.payload
     },
-    updateSelectedStops(state, action: PayloadAction<AvailableStops>) {
+
+    updateAvailableStops(state, action: PayloadAction<AvailableStops>) {
       state.selectedStops = { ...action.payload, ...state.selectedStops }
     },
-    changeAllStops(state, action: PayloadAction<SelectedStops>) {
+    updateStopsFilter(state, action: PayloadAction<SelectedStops>) {
       state.selectedStops = action.payload
-    },
-    changeOneStop(state, action: PayloadAction<string>) {
-      const { all, ...availableStops } = state.selectedStops
-      const currentStopsAmount = action.payload
-
-      if (all) {
-        state.selectedStops = {
-          ...availableStops,
-          [currentStopsAmount]: false,
-          all: false,
-        }
-      } else {
-        const isSelected = availableStops[currentStopsAmount]
-        const updatedAvailableStops = {
-          ...availableStops,
-          [currentStopsAmount]: !isSelected,
-        }
-
-        const updatedSelectedStops = {
-          ...updatedAvailableStops,
-          all: Object.values(updatedAvailableStops).every(Boolean),
-        }
-        state.selectedStops = updatedSelectedStops
-      }
     },
     updateSortMethod(state, action: PayloadAction<SORT_METHODS>) {
       state.sortMethod = action.payload
@@ -68,11 +45,10 @@ const { actions, reducer } = createSlice({
 })
 
 export const {
-  updateTickets,
+  updateOriginTickets,
   updateModifiedTickets,
-  updateSelectedStops,
-  changeAllStops,
-  changeOneStop,
+  updateAvailableStops,
+  updateStopsFilter,
   updateSortMethod,
 } = actions
 export const tickets = reducer
@@ -120,9 +96,9 @@ export const startTicketsPolling = (): AppThunk => async (
     )
 
     batch(() => {
-      dispatch(updateTickets(updatedBackendTickets))
+      dispatch(updateOriginTickets(updatedBackendTickets))
       dispatch(updateModifiedTickets(sortedTickets))
-      dispatch(updateSelectedStops(availableStops))
+      dispatch(updateAvailableStops(availableStops))
     })
   }
 }
@@ -142,8 +118,6 @@ export const changeAllStopsFilter = (): AppThunk => async (
     stopsToUpdate[amount] = toggledAllFilter
   })
 
-  dispatch(changeAllStops(stopsToUpdate))
-
   const filteredTickets = await transformService.filterTickets(
     origin,
     stopsToUpdate,
@@ -153,7 +127,10 @@ export const changeAllStopsFilter = (): AppThunk => async (
     sortMethod,
   )
 
-  dispatch(updateModifiedTickets(sortedAndFilteredTickets))
+  batch(() => {
+    dispatch(updateStopsFilter(stopsToUpdate))
+    dispatch(updateModifiedTickets(sortedAndFilteredTickets))
+  })
 }
 
 export const changeStopsFilter = (stopsAmount: string): AppThunk => async (
@@ -161,13 +138,32 @@ export const changeStopsFilter = (stopsAmount: string): AppThunk => async (
   getState,
   transformService,
 ) => {
-  dispatch(changeOneStop(stopsAmount))
-
   const { selectedStops, origin, sortMethod } = getState().tickets
+  const { all, ...availableStops } = selectedStops
+  let updatedStopsFilter: SelectedStops
+
+  if (all) {
+    updatedStopsFilter = {
+      ...availableStops,
+      [stopsAmount]: false,
+      all: false,
+    }
+  } else {
+    const isSelected = availableStops[stopsAmount]
+    const updatedAvailableStops = {
+      ...availableStops,
+      [stopsAmount]: !isSelected,
+    }
+
+    updatedStopsFilter = {
+      ...updatedAvailableStops,
+      all: Object.values(updatedAvailableStops).every(Boolean),
+    }
+  }
 
   const filteredTickets = await transformService.filterTickets(
     origin,
-    selectedStops,
+    updatedStopsFilter,
   )
 
   const sortedAndFilteredTickets = await transformService.sortTickets(
@@ -175,7 +171,10 @@ export const changeStopsFilter = (stopsAmount: string): AppThunk => async (
     sortMethod,
   )
 
-  dispatch(updateModifiedTickets(sortedAndFilteredTickets))
+  batch(() => {
+    dispatch(updateStopsFilter(updatedStopsFilter))
+    dispatch(updateModifiedTickets(sortedAndFilteredTickets))
+  })
 }
 
 export const changeSortMethod = (sortMethod: SORT_METHODS): AppThunk => async (
@@ -185,9 +184,10 @@ export const changeSortMethod = (sortMethod: SORT_METHODS): AppThunk => async (
 ) => {
   const { modified } = getState().tickets
 
-  dispatch(updateSortMethod(sortMethod))
-
   const sortedTickets = await transformService.sortTickets(modified, sortMethod)
 
-  dispatch(updateModifiedTickets(sortedTickets))
+  batch(() => {
+    dispatch(updateSortMethod(sortMethod))
+    dispatch(updateModifiedTickets(sortedTickets))
+  })
 }
