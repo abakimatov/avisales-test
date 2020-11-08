@@ -60,7 +60,7 @@
 
 .label {
     padding-left: var(--space-s);
-    font-family: var(--secondary-font);
+    font-family: var(--font-family);
     font-weight: var(--secondary-weight);
     color: var(--default-color);
     font-size: var(--font-size-m);

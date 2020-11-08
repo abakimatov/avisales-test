@@ -1,12 +1,12 @@
 @font-face {
     font-family: 'Open Sans';
-    src: local('Open Sans Regular'), url('../assets/fonts/OpenSans-Regular.ttf') format('ttf');
+    src: local('OpenSans Regular'), url('../assets/fonts/OpenSans-Regular.ttf') format('truetype');
     font-weight: 400;
 }
 
 @font-face {
-    font-family: 'Open Sans';
-    src: local('Open Sans SemiBold'), url('../assets/fonts/OpenSans-SemiBold.ttf') format('ttf');
+    font-family: Open Sans;
+    src: local('OpenSans SemiBold'), url('../assets/fonts/OpenSans-SemiBold.ttf') format('truetype');
     font-weight: 600;
 }
 
@@ -14,10 +14,9 @@
     /* fonts */
     font-size: 10px;
 
-    --primary-font: 'Open Sans SemiBold', Roboto, Helvetica, Arial, sans-serif;
-    --primary-weight: 600;
+    --font-family: Open Sans;
 
-    --secondary-font: 'Open Sans Regular', Roboto, Helvetica, Arial, sans-serif;
+    --primary-weight: 600;
     --secondary-weight: 400;
 
     /* colors */
@@ -78,7 +77,7 @@ html {
     -webkit-font-smoothing: antialiased;
     color: var(--default-color);
     font-weight: 400;
-    font-family: var(--secondary-font);
+    font-family: var(--font-family);
     line-height: var(--line-height-s);
     height: 100vh;
     margin: 0;
