@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 
 import { Box } from 'ui/box'
-import { Ticket as TicketType } from 'lib/worker'
+import { Ticket as TicketType } from 'core/worker'
 
 import s from './styles.module.css'
 
