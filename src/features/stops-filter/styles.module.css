@@ -1,5 +1,5 @@
 .wrapper {
-    padding: var(--space-m) 0;
+    padding: var(--space-m) 0 var(--space-s) 0;
 }
 
 .titleContainer {

@@ -2,11 +2,9 @@ import { pluralize } from './pluralize'
 
 const stopsForms = ['пересадка', 'пересадки', 'пересадок']
 
-export const getStopsLabel = (stopsAmount: string | number): string => {
-  const stopsAmountInt = Number(stopsAmount)
-
-  const labelHead = stopsAmountInt === 0 ? 'Без' : stopsAmount
-  const pluralizedLabel = pluralize(stopsAmountInt, stopsForms)
+export const getStopsLabel = (stopsAmount: number): string => {
+  const labelHead = stopsAmount === 0 ? 'Без' : stopsAmount
+  const pluralizedLabel = pluralize(stopsAmount, stopsForms)
 
   return `${labelHead} ${pluralizedLabel}`
 }

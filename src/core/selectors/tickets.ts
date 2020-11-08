@@ -31,7 +31,7 @@ export const sortMethodSelector = createSelector(
 
 export const ticketsSelector = createSelector(
   [ticketsStateSelector, selectedStopsSelector, sortMethodSelector],
-  ({ viewData }) => {
-    return viewData
+  ({ modified }) => {
+    return modified
   },
 )
