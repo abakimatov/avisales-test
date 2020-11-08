@@ -2,7 +2,8 @@ import { configureStore, Action } from '@reduxjs/toolkit'
 import { ThunkAction } from 'redux-thunk'
 
 import { rootReducer, RootState } from './root-reducer'
-import { transformService, TransformService } from '../worker'
+import { transformService } from '../worker'
+import { TransformService } from '../typings/worker'
 
 export const store = configureStore({
   reducer: rootReducer,

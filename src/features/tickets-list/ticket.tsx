@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 
 import { Box } from 'ui/box'
-import { Ticket as TicketType } from 'core/worker'
+import { Ticket as TicketType } from 'core/typings/worker'
 
 import s from './styles.module.css'
 
@@ -14,7 +14,7 @@ export const Ticket = memo(
             <span className={s.price}>{formattedPrice}</span>
             <img
               src={carrierIconUrl}
-              style={{ marginRight: '3rem', width: '11rem' }}
+              className={s.carrierIcon}
               alt="carrier logo"
             />
           </div>
